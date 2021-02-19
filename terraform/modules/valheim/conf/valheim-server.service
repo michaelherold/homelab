@@ -1,0 +1,30 @@
+[Unit]
+Description=Valheim Server
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+EnvironmentFile=-/etc/sysconfig/valheim-server
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull lloesche/valheim-server
+ExecStart=/usr/bin/docker run \
+          --name %n \
+          --rm \
+          -v /opt/valheim:/config:Z \
+          -p 2456-2458:2456-2458/udp \
+          -e SERVER_NAME \
+          -e SERVER_PORT \
+          -e WORLD_NAME \
+          -e SERVER_PASS \
+          -e SERVER_PUBLIC \
+          --dns $DNS_1 \
+          --dns $DNS_2 \
+          lloesche/valheim-server
+ExecStop=/usr/bin/docker stop %n
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

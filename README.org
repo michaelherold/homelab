@@ -1,0 +1,45 @@
+#+title: Home Lab Setup
+
+* Introduction
+
+This is a fledgling setup for my Home Lab. As I grow my personal server setup --- or if I do, if I'm being honest --- I will store the configuration in this repository. I mainly use it as practice for tools that I use.
+
+* Usage
+
+There are a few prerequisites you will need to run these scripts yourself.
+
+1. [[https://direnv.net/][direnv]]
+2. [[https://www.terraform.io/][Terraform v0.14+]]
+3. A DigitalOcean account and API key
+4. A Cloudflare account, zone, and API key
+
+Once you have those set up, you can copy the =.envrc.tpl= file to =.envrc= and fill it out.
+
+* Valheim
+
+My friends and I recently purchased [[https://www.valheimgame.com/][Valheim]], an early-access survival game with a Nordic mythology gimmick. In order to easily play together, I use Terraform to set up a dedicated server using [[https://hub.docker.com/r/lloesche/valheim-server][a Docker image]] on DigitalOcean.
+
+To provision one, change to the =terraform= directory and ensure you have filled out the =.envrc= file from [[*Usage][Usage]]. Then you'll need to create an SSH key for the purposes of managing this server:
+
+#+begin_src shell
+ssh-keygen -t ed25519 -f ~/.ssh/id_valheim
+#+end_src
+
+Then, you can plan out the deployment and apply it:
+
+#+begin_src shell
+terraform plan -out plan
+terraform apply
+#+end_src
+
+In roughly two minutes, you will have a server running on a $20/mo DigitalOcean droplet.
+
+The Docker image takes regular backups, but I have not automated a way to store those anywhere. So before you destroy it, make sure to upload a backup to an object store like [[https://wasabi.com][Wasabi]] or [[https://aws.amazon.com][Amazon S3]].
+
+To destroy the server, run:
+
+#+begin_src shell
+terraform destroy
+#+end_src
+
+Then answer the prompt.

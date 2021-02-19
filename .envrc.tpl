@@ -1,0 +1,6 @@
+export CLOUDFLARE_API_TOKEN=
+export DIGITALOCEAN_TOKEN=
+export TF_VAR_root_domain_zone=
+export TF_VAR_valheim_server_name=
+export TF_VAR_valheim_server_pass=
+export TF_VAR_valheim_world_name=
